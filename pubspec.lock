@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+  animate_do:
+    dependency: "direct main"
+    description:
+      name: animate_do
+      sha256: "9aeacc1a7238f971c039bdf45d13c628be554a242e0251c4ddda09d19a1a923f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   args:
     dependency: transitive
     description:
@@ -169,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  dart_either:
+    dependency: transitive
+    description:
+      name: dart_either
+      sha256: "928895b8266ac5906eb4e2993fead563a73b17fc86eec6b40172100d56ca2507"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   dart_style:
     dependency: transitive
     description:
@@ -222,6 +238,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bloc_pattern:
+    dependency: transitive
+    description:
+      name: flutter_bloc_pattern
+      sha256: "76fc4e7cd79cfe770ca69a0ea8133cf1ac180ecf42e86d316db3693fcd871501"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
+  flutter_google_places_hoc081098:
+    dependency: "direct main"
+    description:
+      name: flutter_google_places_hoc081098
+      sha256: b416afe9004d61b643d2c6467e6401960fe3102835a5df846683f47875183b0b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -238,6 +270,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.15"
+  flutter_provider:
+    dependency: transitive
+    description:
+      name: flutter_provider
+      sha256: "5bc7d1e9edcf364397f312b9eb901337a644a5e4a907225bcd1d7e9b020ac914"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -272,6 +312,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: b33a88c67816312597e5e0f5906c5139a0b9bd9bb137346e872c788da7af8ea0
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.3"
+  google_api_headers:
+    dependency: "direct main"
+    description:
+      name: google_api_headers
+      sha256: b27a55935d5c51cedda8a925f5df8388cc327c94a47fef5a4335e8707e089878
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   google_maps:
     dependency: transitive
     description:
@@ -320,6 +376,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.1"
+  google_maps_webservice:
+    dependency: "direct main"
+    description:
+      name: google_maps_webservice
+      sha256: d0ae4e4508afd74a3f051565261a3cdbae59db29448f9b6e6beb5674545e1eb7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.20-nullsafety.5"
   graphs:
     dependency: transitive
     description:
@@ -336,6 +400,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.4"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.6"
   http_multi_server:
     dependency: transitive
     description:
@@ -416,6 +488,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  listenable_stream:
+    dependency: transitive
+    description:
+      name: listenable_stream
+      sha256: "5458276035c7eb66477c30f8eab0942e56537ba3d268172574f7af97e265e894"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   logging:
     dependency: transitive
     description:
@@ -464,6 +544,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: ceb027f6bc6a60674a233b4a90a7658af1aebdea833da0b5b53c1e9821a78c7b
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.2"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
@@ -520,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.7"
+  pedantic:
+    dependency: transitive
+    description:
+      name: pedantic
+      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.11.1"
   platform:
     dependency: transitive
     description:
@@ -568,6 +672,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.27.7"
+  rxdart_ext:
+    dependency: transitive
+    description:
+      name: rxdart_ext
+      sha256: ca0b07216b4568e70d88154efd893ded54cf8cea43276c66baae245a843c326f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.9"
   sanitize_html:
     dependency: transitive
     description:
@@ -669,6 +789,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  speech_to_text:
+    dependency: "direct main"
+    description:
+      name: speech_to_text
+      sha256: "59393a58815a517dc1237a81ccbaf8302f44d107d84fafca9c295cdf7fff404f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.0"
+  speech_to_text_macos:
+    dependency: transitive
+    description:
+      name: speech_to_text_macos
+      sha256: "6b5575e5a8346be1779838b0a482c259474965b5943668830b479147a75b5bfc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  speech_to_text_platform_interface:
+    dependency: transitive
+    description:
+      name: speech_to_text_platform_interface
+      sha256: "2ef9c0abf3b4340998fcb489afc4fc8cd7574eff21d912673be59b60ff16850c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   stack_trace:
     dependency: transitive
     description:

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/storage/edificios_provider.dart';
-import 'package:location_grm/feactures/mapa/presentation/widgets/search_input.dart';
+import 'package:location_grm/feactures/mapa/presentation/widgets/search_destino.dart';
 
 class ListaEdificio extends ConsumerStatefulWidget {
   const ListaEdificio({super.key});
@@ -27,15 +27,15 @@ class ListaEdificioState extends ConsumerState<ListaEdificio> {
       appBar: appBar(),
       body: Column(
         children: [
-          SearchInput(
-            controller: textControler,
-            hintText: 'Buscar destino',
-            onChanged: (value) {
-              ref
-                  .read(edificioProvider.notifier)
-                  .getEdificio(descripcion: value);
-            },
-          ),
+          // SearchInput(
+          //   controller: textControler,
+          //   hintText: 'Buscar destino',
+          //   onChanged: (value) {
+          //     ref
+          //         .read(edificioProvider.notifier)
+          //         .getEdificio(descripcion: value);
+          //   },
+          // ),
           // TextFormField(
           //   controller: textControler,
           //   onChanged: (value) {

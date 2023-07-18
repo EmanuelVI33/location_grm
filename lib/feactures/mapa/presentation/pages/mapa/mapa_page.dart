@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_body.dart';
+import 'package:location_grm/feactures/mapa/presentation/widgets/floating_mark_location.dart';
 
 class MapaPage extends ConsumerStatefulWidget {
   const MapaPage({super.key});
@@ -17,13 +18,11 @@ class MapaPageState extends ConsumerState<MapaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: MapaBody(),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Colors.indigo,
-      //   onPressed: () {},
-      //   child: const Icon(Icons.my_location),
-      // ),
+      floatingActionButton: FloatingMarkLocation(
+        onPressed: () {},
+      ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }

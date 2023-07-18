@@ -19,18 +19,18 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   Future<Isar> openDB() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final bool dataLoaded = prefs.getBool('dataLoaded') ?? false;
+    final prefs = await SharedPreferences.getInstance();
+    final bool dataLoaded = prefs.getBool('dataLoaded') ?? false;
 
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
       final isar = await Isar.open([EdificioSchema],
           inspector: true, directory: dir.path);
 
-      // if (!dataLoaded) {
-      await loadData(isar);
-      // prefs.setBool('dataLoaded', true);
-      // }
+      if (!dataLoaded) {
+        await loadData(isar);
+        prefs.setBool('dataLoaded', true);
+      }
 
       return isar;
     }
