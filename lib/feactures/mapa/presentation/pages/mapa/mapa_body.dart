@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
@@ -13,18 +14,20 @@ import 'package:location_grm/feactures/mapa/presentation/widgets/search_destino.
 import 'package:location_grm/feactures/mapa/presentation/widgets/search_origen.dart';
 
 class MapaBody extends ConsumerStatefulWidget {
-  const MapaBody({super.key});
+  final TextEditingController textOriginController;
+  const MapaBody({super.key, required this.textOriginController});
 
   @override
-  MapaBodyState createState() => MapaBodyState();
+  MapaBodyState createState() => MapaBodyState(origenController:  textOriginController);
 }
 
 class MapaBodyState extends ConsumerState<MapaBody> {
   // // GoogleMapController? mapController;
-  // final TextEditingController origenController = TextEditingController();
+  final TextEditingController origenController;// = TextEditingController();
   // final TextEditingController destinationController = TextEditingController();
   // FocusNode origenFocusNode = FocusNode();
   // FocusNode destinationFocusNode = FocusNode();
+  MapaBodyState({required this.origenController});
 
   @override
   void initState() {
@@ -49,6 +52,10 @@ class MapaBodyState extends ConsumerState<MapaBody> {
             onMapCreated: (controller) => ref
                 .read(mapCreatedProvider.notifier)
                 .setMapController(controller),
+            onTap: (LatLng point) async {
+              ref.read(markersProvider.notifier).addDestino(point);
+              origenController.text = await getAddress(point);
+            },
             markers: Set<Marker>.from(markers.values),
             initialCameraPosition: cameraPosition,
           ),
@@ -59,8 +66,9 @@ class MapaBodyState extends ConsumerState<MapaBody> {
             children: [
               SizedBox(
                 width: size.width,
-                child: const SearchOrigen(
+                child: SearchOrigen(
                   hintText: 'Buscar origen',
+                  textController: origenController,
                 ),
               ),
               const SizedBox(
@@ -83,6 +91,34 @@ class MapaBodyState extends ConsumerState<MapaBody> {
               // ),
               // if (showMicrophone) const Icon(Icons.mic)
             ],
+          ),
+        ),
+        Positioned(
+          bottom: 50,
+          left: (size.width - 150)/2 ,
+          child: Visibility(
+            visible: (ref.watch(markersProvider)['origen'] != null && ref.watch(markersProvider)['destino'] != null),
+            child: SizedBox(
+              width: 150,
+              child: ElevatedButton.icon(
+                onPressed: (){
+
+                },
+                icon: const Icon(Icons.route_outlined),
+                label: const Text(
+                  'Ver Ruta',
+                  style: TextStyle(fontSize: 20),
+                ),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          20), // Ajusta el radio según tus necesidades
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
         // if (showMicrophone)
@@ -111,5 +147,16 @@ class MapaBodyState extends ConsumerState<MapaBody> {
         // ),
       ],
     );
+  }
+  Future<String> getAddress(LatLng point) async {
+    final placemarks = await placemarkFromCoordinates(
+      point.latitude,
+      point.longitude,
+      localeIdentifier: 'es',
+    );
+
+    String ubicacion = placemarks.first.thoroughfare ?? '';
+
+    return placemarks.first.thoroughfare == '' ? 'Ubicación actual' : ubicacion;
   }
 }
