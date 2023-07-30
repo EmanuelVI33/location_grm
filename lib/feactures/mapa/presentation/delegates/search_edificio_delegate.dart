@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_grm/feactures/mapa/domain/entities/edificio.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/delegate/item_edificio.dart';
+import 'package:location_grm/feactures/mapa/presentation/widgets/dialog/show_dialog.dart';
 
 typedef SearchEdificioCallback = Future<List<Edificio?>> Function(
     {String? descripcion, String? localidad});
@@ -10,12 +10,12 @@ typedef SearchEdificioCallback = Future<List<Edificio?>> Function(
 class SearchEdifioDelegate extends SearchDelegate<Edificio?> {
   final String label;
   final SearchEdificioCallback searchEdificio;
-  // final void Function(LatLng) addMarker;
+
+  bool _isLoading = false;
 
   SearchEdifioDelegate({
     required this.label,
     required this.searchEdificio,
-    // required this.addMarker,
   });
 
   @override
@@ -24,10 +24,26 @@ class SearchEdifioDelegate extends SearchDelegate<Edificio?> {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      FadeIn(
-          animate: query.isNotEmpty,
+      if (query.isNotEmpty)
+        FadeIn(
+            animate: query.isNotEmpty,
+            child: IconButton(
+                onPressed: () => query = '', icon: const Icon(Icons.clear)))
+      else
+        FadeIn(
+          animate: query.isEmpty,
           child: IconButton(
-              onPressed: () => query = '', icon: const Icon(Icons.clear)))
+            onPressed: () async {
+              final result = await showDialogVoice(context);
+
+              if (result != null) {
+                query = result;
+              }
+            },
+            icon: const Icon(Icons.mic),
+            color: Colors.blueAccent,
+          ),
+        ),
     ];
   }
 
@@ -46,8 +62,19 @@ class SearchEdifioDelegate extends SearchDelegate<Edificio?> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder(
-      future: searchEdificio(descripcion: query),
+      future: _getEdificios(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          _isLoading = true;
+          return _buildLoadingIndicator(); // Muestra un indicador de carga
+        }
+
+        if (snapshot.hasError) {
+          return _buildErrorWidget(); // Muestra un mensaje de error si la consulta falla
+        }
+
+        _isLoading = false;
+
         final edificios = snapshot.data ?? [];
 
         return ListView.builder(
@@ -64,5 +91,36 @@ class SearchEdifioDelegate extends SearchDelegate<Edificio?> {
         );
       },
     );
+  }
+
+  Future<List<Edificio?>> _getEdificios() async {
+    return await searchEdificio(descripcion: query);
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Center(
+      child: Text('Error al cargar los datos'),
+    );
+  }
+
+  Future<String?> showDialogVoice(BuildContext context) async {
+    String? query;
+    await showDialog(
+      context: context,
+      builder: (context) => const ShowDialog(),
+    ).then((value) {
+      query = value ??
+          false; // Si value es null (usuario cierra el diálogo), se considera falso.
+    }).catchError(() {
+      // En caso de error, se considera falso.
+    });
+
+    return query;
   }
 }

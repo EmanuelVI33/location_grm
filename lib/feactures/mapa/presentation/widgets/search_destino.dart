@@ -3,28 +3,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_grm/feactures/mapa/domain/entities/edificio.dart';
 import 'package:location_grm/feactures/mapa/presentation/delegates/search_edificio_delegate.dart';
+import 'package:location_grm/feactures/mapa/presentation/providers/delegate/voice_text_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/markers_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/storage/local_storage_provider.dart';
+import 'package:location_grm/feactures/mapa/presentation/widgets/dialog/show_dialog.dart';
 
 class SearchDestino extends ConsumerStatefulWidget {
   final String hintText;
+  final Function displayMicrophone;
 
-  const SearchDestino({super.key, required this.hintText});
+  const SearchDestino(
+      {super.key, required this.hintText, required this.displayMicrophone});
 
   @override
-  SearchInputState createState() => SearchInputState(hintText: hintText);
+  SearchInputState createState() => SearchInputState();
 }
 
 class SearchInputState extends ConsumerState<SearchDestino> {
   TextEditingController controller = TextEditingController();
   FocusNode focusNode = FocusNode();
 
-  final String hintText;
-
-  SearchInputState({required this.hintText});
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final textProvider = ref.watch(voiceTextProvider);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: TextField(
@@ -35,7 +42,7 @@ class SearchInputState extends ConsumerState<SearchDestino> {
           filled: true,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          hintText: hintText,
+          hintText: widget.hintText,
           hintStyle: const TextStyle(color: Colors.grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(25),
@@ -50,80 +57,58 @@ class SearchInputState extends ConsumerState<SearchDestino> {
             borderSide: const BorderSide(color: Colors.blue),
           ),
           suffixIcon: IconButton(
-              onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(),
-                  ),
+              onPressed: () async {
+                final result = await showDialogVoice(context);
+
+                if (result != null) {
+                  showDelegate(context, query: result);
+                }
+              },
               icon: const Icon(Icons.mic),
               color: Colors.grey[700]),
         ),
         textInputAction: TextInputAction.search,
         // onChanged: onChanged,
         onTap: () async {
-          focusNode.unfocus();
-
-          final localStorageRep = ref.read(localStorageRepositoryProvider);
-
-          Edificio? edificio = await showSearch<Edificio?>(
-            context: context,
-            delegate: SearchEdifioDelegate(
-              label: 'Buscar origen',
-              searchEdificio: localStorageRep.getEdificio,
-            ),
-          );
-
-          if (edificio != null) {
-            final point = LatLng(edificio.latitud, edificio.longitud);
-            ref.read(markersProvider.notifier).addOrigen(point);
-            controller.text = edificio.descripcion;
-          }
+          await showDelegate(context);
         },
       ),
     );
   }
+
+  Future<String?> showDialogVoice(BuildContext context) async {
+    String? query;
+    await showDialog(
+      context: context,
+      builder: (context) => const ShowDialog(),
+    ).then((value) {
+      query = value ??
+          false; // Si value es null (usuario cierra el diálogo), se considera falso.
+    }).catchError(() {
+      // En caso de error, se considera falso.
+    });
+
+    return query;
+  }
+
+  Future<void> showDelegate(BuildContext context, {String? query}) async {
+    focusNode.unfocus();
+
+    final localStorageRep = ref.read(localStorageRepositoryProvider);
+
+    Edificio? edificio = await showSearch<Edificio?>(
+      context: context,
+      query: query,
+      delegate: SearchEdifioDelegate(
+        label: 'Buscar origen',
+        searchEdificio: localStorageRep.getEdificio,
+      ),
+    );
+
+    if (edificio != null) {
+      final point = LatLng(edificio.latitud, edificio.longitud);
+      ref.read(markersProvider.notifier).addOrigen(point);
+      controller.text = edificio.descripcion;
+    }
+  }
 }
-
-
-// class SearchInput extends StatelessWidget {
-//   final String hintText;
-//   final TextEditingController controller;
-//   final void Function(String)? onChanged;
-
-//   const SearchInput({
-//     Key? key,
-//     required this.controller,
-//     this.onChanged,
-//     required this.hintText,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-//       child: TextField(
-//         controller: controller,
-//         decoration: InputDecoration(
-//           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-//           hintText: hintText,
-//           hintStyle: const TextStyle(color: Colors.grey),
-//           border: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8.0),
-//             borderSide: BorderSide(color: Colors.grey.shade400),
-//           ),
-//           enabledBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8.0),
-//             borderSide: BorderSide(color: Colors.grey.shade400),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8.0),
-//             borderSide: const BorderSide(color: Colors.blue),
-//           ),
-//           suffixIcon: const Icon(Icons.search, color: Colors.grey),
-//         ),
-//         textInputAction: TextInputAction.search,
-//         // onSubmitted: onSubmitted,
-//         onChanged: onChanged,
-//       ),
-//     );
-//   }
-// }

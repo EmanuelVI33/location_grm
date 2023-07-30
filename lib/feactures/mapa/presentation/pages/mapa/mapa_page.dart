@@ -19,10 +19,24 @@ class MapaPageState extends ConsumerState<MapaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MapaBody(),
+      body: const MapaBody(),
       floatingActionButton: FloatingMarkLocation(
         onPressed: () {},
       ),
+      // floatingActionButton: Row(
+      //   children: [
+      //     FloatingMarkLocation(
+      //       onPressed: () {},
+      //     ),
+      //     const SizedBox(
+      //       width: 10,
+      //     ),
+      //     FloatingActionButton(
+      //       onPressed: () {},
+      //       child: const Icon(Icons.mic),
+      //     )
+      //   ],
+      // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
