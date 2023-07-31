@@ -10,15 +10,16 @@ import 'package:location_grm/feactures/mapa/presentation/widgets/dialog/show_dia
 
 class SearchOrigen extends ConsumerStatefulWidget {
   final String hintText;
+  final TextEditingController textController;
 
-  const SearchOrigen({super.key, required this.hintText});
+  const SearchOrigen({super.key, required this.hintText, required this.textController});
 
   @override
-  SearchOrigenState createState() => SearchOrigenState(hintText: hintText);
+  SearchOrigenState createState() => SearchOrigenState(hintText: hintText, controller: textController);
 }
 
 class SearchOrigenState extends ConsumerState<SearchOrigen> {
-  TextEditingController controller = TextEditingController();
+  TextEditingController controller ;//= TextEditingController();
   FocusNode origenFocusNode = FocusNode();
   String location = "Search Location";
 
@@ -26,6 +27,7 @@ class SearchOrigenState extends ConsumerState<SearchOrigen> {
 
   SearchOrigenState({
     required this.hintText,
+    required this.controller
   });
 
   @override

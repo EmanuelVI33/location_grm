@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_body.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/floating_mark_location.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../providers/mapa/markers_provider.dart';
 
 class MapaPage extends ConsumerStatefulWidget {
   const MapaPage({super.key});
@@ -11,6 +17,8 @@ class MapaPage extends ConsumerStatefulWidget {
 }
 
 class MapaPageState extends ConsumerState<MapaPage> {
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  TextEditingController origenController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -19,9 +27,9 @@ class MapaPageState extends ConsumerState<MapaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const MapaBody(),
+      body: MapaBody(textOriginController: origenController),
       floatingActionButton: FloatingMarkLocation(
-        onPressed: () {},
+        onPressed:marcarUbicacionActual,
       ),
       // floatingActionButton: Row(
       //   children: [
@@ -39,5 +47,54 @@ class MapaPageState extends ConsumerState<MapaPage> {
       // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
+  }
+  Future<String> getAddress(LatLng point) async {
+    final placemarks = await placemarkFromCoordinates(
+      point.latitude,
+      point.longitude,
+      localeIdentifier: 'es',
+    );
+
+    String ubicacion = placemarks.first.thoroughfare ?? '';
+
+    return placemarks.first.thoroughfare == '' ? 'Ubicación actual' : ubicacion;
+  }
+  Future<void> marcarUbicacionActual() async {
+    final permissionStatus = await Permission.location.request();
+    if (permissionStatus.isGranted) {
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
+
+        final latitude = position.latitude;
+        final longitude = position.longitude;
+
+        final point = LatLng(latitude, longitude);
+        final address = await getAddress(point);
+        ref.read(markersProvider.notifier).addDestino(point);
+        origenController.text = address;
+      } catch (e) {
+        print('Error al obtener la ubicación actual: $e');
+      }
+    } else {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Permiso de ubicación denegado'),
+              content: const Text(
+                  'No se puede obtener la ubicación actual porque no has concedido los permisos necesarios.'),
+              actions: [
+                TextButton(
+                  child: const Text('Cerrar'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
 }
