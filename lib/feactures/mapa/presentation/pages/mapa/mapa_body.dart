@@ -9,8 +9,6 @@ import 'package:location_grm/feactures/mapa/presentation/providers/mapa/camera_p
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/map_controller_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/markers_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/microphone_provider.dart';
-import 'package:location_grm/feactures/mapa/presentation/widgets/direccion_origen_input_widget.dart';
-import 'package:location_grm/feactures/mapa/presentation/widgets/microphone.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/search_destino.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/search_origen.dart';
 
@@ -21,12 +19,13 @@ class MapaBody extends ConsumerStatefulWidget {
   const MapaBody({super.key, required this.textOriginController});
 
   @override
-  MapaBodyState createState() => MapaBodyState(origenController:  textOriginController);
+  MapaBodyState createState() =>
+      MapaBodyState(origenController: textOriginController);
 }
 
 class MapaBodyState extends ConsumerState<MapaBody> {
   // // GoogleMapController? mapController;
-  final TextEditingController origenController;// = TextEditingController();
+  final TextEditingController origenController; // = TextEditingController();
   // final TextEditingController destinationController = TextEditingController();
   // FocusNode origenFocusNode = FocusNode();
   // FocusNode destinationFocusNode = FocusNode();
@@ -47,7 +46,6 @@ class MapaBodyState extends ConsumerState<MapaBody> {
     Set<TravelMode> selected = {rutaPolylines.travelMode!};
     return Stack(
       children: [
-        // top: 300,
         SizedBox(
           child: GoogleMap(
             myLocationButtonEnabled: true,
@@ -101,14 +99,13 @@ class MapaBodyState extends ConsumerState<MapaBody> {
         ),
         Positioned(
           bottom: 50,
-          left: (size.width - 150)/2 ,
+          left: (size.width - 150) / 2,
           child: Visibility(
             visible: !rutaPolylines.travelSelec,
             child: SizedBox(
               width: 150,
               child: ElevatedButton.icon(
-                onPressed: ref.read(mapPolylineProvider.notifier).update
-                ,
+                onPressed: ref.read(mapPolylineProvider.notifier).update,
                 icon: const Icon(Icons.route_outlined),
                 label: const Text(
                   'Ver Ruta',
@@ -127,27 +124,45 @@ class MapaBodyState extends ConsumerState<MapaBody> {
           ),
         ),
         Positioned.fill(
-          bottom: 50,
+          bottom: 75,
           child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Visibility(
-              visible: rutaPolylines.travelSelec,
-              child: SegmentedButton(
-                style: ButtonStyle(
-                  
-                ),
-                segments: [
-                  ButtonSegment(value: TravelMode.driving, icon: Text('vehiculo')),
-                  ButtonSegment(value: TravelMode.walking, icon: Text('caminando')),
-                ],
-                selected: selected,
-                onSelectionChanged: (value) {
-                  ref.read(mapPolylineProvider.notifier).update(travelMode: value.first);
-                },
-              )
-            ),
-          )
+              alignment: Alignment.bottomCenter,
+              child: Visibility(
+                  visible: rutaPolylines.travelSelec,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.indigo),
+                    child: Text(
+                      '${ref.read(mapPolylineProvider.notifier).getDuration(rutaPolylines.travelMode!)} Km',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ))),
         ),
+        Positioned.fill(
+            bottom: 15,
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Visibility(
+                  visible: rutaPolylines.travelSelec,
+                  child: SegmentedButton(
+                    style: ButtonStyle(),
+                    segments: [
+                      ButtonSegment(
+                          value: TravelMode.driving, icon: Text('vehiculo')),
+                      ButtonSegment(
+                          value: TravelMode.walking, icon: Text('caminando')),
+                    ],
+                    selected: selected,
+                    onSelectionChanged: (value) {
+                      ref
+                          .read(mapPolylineProvider.notifier)
+                          .update(travelMode: value.first);
+                    },
+                  ),
+                ))),
         // if (showMicrophone)
         //   Positioned(
         //     bottom: 0,
@@ -175,6 +190,7 @@ class MapaBodyState extends ConsumerState<MapaBody> {
       ],
     );
   }
+
   Future<String> getAddress(LatLng point) async {
     final placemarks = await placemarkFromCoordinates(
       point.latitude,
@@ -185,5 +201,31 @@ class MapaBodyState extends ConsumerState<MapaBody> {
     String ubicacion = placemarks.first.thoroughfare ?? '';
 
     return placemarks.first.thoroughfare == '' ? 'Ubicación actual' : ubicacion;
+  }
+}
+
+class _InfoRoute extends StatelessWidget {
+  const _InfoRoute({
+    super.key,
+    required this.selected,
+    required this.ref,
+  });
+
+  final Set<TravelMode> selected;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton(
+      style: ButtonStyle(),
+      segments: [
+        ButtonSegment(value: TravelMode.driving, icon: Text('vehiculo')),
+        ButtonSegment(value: TravelMode.walking, icon: Text('caminando')),
+      ],
+      selected: selected,
+      onSelectionChanged: (value) {
+        ref.read(mapPolylineProvider.notifier).update(travelMode: value.first);
+      },
+    );
   }
 }
