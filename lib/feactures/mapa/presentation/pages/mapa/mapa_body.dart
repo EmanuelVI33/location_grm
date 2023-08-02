@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,6 +13,8 @@ import 'package:location_grm/feactures/mapa/presentation/widgets/direccion_orige
 import 'package:location_grm/feactures/mapa/presentation/widgets/microphone.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/search_destino.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/search_origen.dart';
+
+import '../../providers/mapa/polylines_provider.dart';
 
 class MapaBody extends ConsumerStatefulWidget {
   final TextEditingController textOriginController;
@@ -40,7 +43,8 @@ class MapaBodyState extends ConsumerState<MapaBody> {
     final markers = ref.watch(markersProvider);
     final cameraPosition = ref.watch(cameraPositionProvider);
     final showMicrophone = ref.watch(displayMicrophone);
-
+    final rutaPolylines = ref.watch(mapPolylineProvider);
+    Set<TravelMode> selected = {rutaPolylines.travelMode!};
     return Stack(
       children: [
         // top: 300,
@@ -54,10 +58,12 @@ class MapaBodyState extends ConsumerState<MapaBody> {
                 .setMapController(controller),
             onTap: (LatLng point) async {
               ref.read(markersProvider.notifier).addDestino(point);
+              ref.read(mapPolylineProvider.notifier).ocultar();
               origenController.text = await getAddress(point);
             },
             markers: Set<Marker>.from(markers.values),
             initialCameraPosition: cameraPosition,
+            polylines: rutaPolylines.polylines,
           ),
         ),
         Positioned(
@@ -97,13 +103,12 @@ class MapaBodyState extends ConsumerState<MapaBody> {
           bottom: 50,
           left: (size.width - 150)/2 ,
           child: Visibility(
-            visible: (ref.watch(markersProvider)['origen'] != null && ref.watch(markersProvider)['destino'] != null),
+            visible: !rutaPolylines.travelSelec,
             child: SizedBox(
               width: 150,
               child: ElevatedButton.icon(
-                onPressed: (){
-
-                },
+                onPressed: ref.read(mapPolylineProvider.notifier).update
+                ,
                 icon: const Icon(Icons.route_outlined),
                 label: const Text(
                   'Ver Ruta',
@@ -120,6 +125,28 @@ class MapaBodyState extends ConsumerState<MapaBody> {
               ),
             ),
           ),
+        ),
+        Positioned.fill(
+          bottom: 50,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Visibility(
+              visible: rutaPolylines.travelSelec,
+              child: SegmentedButton(
+                style: ButtonStyle(
+                  
+                ),
+                segments: [
+                  ButtonSegment(value: TravelMode.driving, icon: Text('vehiculo')),
+                  ButtonSegment(value: TravelMode.walking, icon: Text('caminando')),
+                ],
+                selected: selected,
+                onSelectionChanged: (value) {
+                  ref.read(mapPolylineProvider.notifier).update(travelMode: value.first);
+                },
+              )
+            ),
+          )
         ),
         // if (showMicrophone)
         //   Positioned(

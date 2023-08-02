@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_body.dart';
+import 'package:location_grm/feactures/mapa/presentation/providers/mapa/polylines_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/floating_mark_location.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -73,6 +74,7 @@ class MapaPageState extends ConsumerState<MapaPage> {
         final point = LatLng(latitude, longitude);
         final address = await getAddress(point);
         ref.read(markersProvider.notifier).addDestino(point);
+        ref.read(mapPolylineProvider.notifier).ocultar();
         origenController.text = address;
       } catch (e) {
         print('Error al obtener la ubicación actual: $e');
