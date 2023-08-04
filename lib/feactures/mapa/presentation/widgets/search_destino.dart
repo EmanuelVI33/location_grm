@@ -58,10 +58,13 @@ class SearchInputState extends ConsumerState<SearchDestino> {
           ),
           suffixIcon: IconButton(
               onPressed: () async {
-                final result = await showDialogVoice(context);
-
-                if (result != null) {
-                  showDelegate(context, query: result);
+                try {
+                  final result = await showDialogVoice(context);
+                  if (result != null) {
+                    showDelegate(context, query: result);
+                  }
+                } catch (e) {
+                  return;
                 }
               },
               icon: const Icon(Icons.mic),
@@ -78,6 +81,7 @@ class SearchInputState extends ConsumerState<SearchDestino> {
 
   Future<String?> showDialogVoice(BuildContext context) async {
     String? query;
+
     await showDialog(
       context: context,
       builder: (context) => const ShowDialog(),
@@ -85,7 +89,7 @@ class SearchInputState extends ConsumerState<SearchDestino> {
       query = value ??
           false; // Si value es null (usuario cierra el diálogo), se considera falso.
     }).catchError(() {
-      // En caso de error, se considera falso.
+      throw Exception("Error");
     });
 
     return query;

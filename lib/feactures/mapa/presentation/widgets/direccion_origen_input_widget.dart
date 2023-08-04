@@ -73,24 +73,24 @@ class _SpeechAddressState extends State<SpeechAddress> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 36,
       child: TextField(
         textAlignVertical: TextAlignVertical.top,
-        style: TextStyle(fontSize: 17),
+        style: const TextStyle(fontSize: 17),
         focusNode: _focusNode,
         controller: _textFieldController,
         decoration: InputDecoration(
             filled: true,
-            fillColor: Color.fromARGB(255, 255, 255, 255),
+            fillColor: const Color.fromARGB(255, 255, 255, 255),
             prefix: IconButton(
-              icon: Icon(Icons.mic),
+              icon: const Icon(Icons.mic),
               onPressed: _speechToText.isNotListening
                   ? _startListening
                   : _stopListening,
             ),
-            suffixIcon: Icon(Icons.search),
-            contentPadding: EdgeInsets.only(bottom: 0.0),
+            suffixIcon: const Icon(Icons.search),
+            contentPadding: const EdgeInsets.only(bottom: 0.0),
             focusedBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(25.0),
               borderSide: BorderSide.none,
