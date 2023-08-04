@@ -101,7 +101,7 @@ class MapaBodyState extends ConsumerState<MapaBody> {
           bottom: 50,
           left: (size.width - 150) / 2,
           child: Visibility(
-            visible: !rutaPolylines.travelSelec,
+            visible: (markers['origen'] != null && markers['destino'] != null && !rutaPolylines.travelSelec),
             child: SizedBox(
               width: 150,
               child: ElevatedButton.icon(
