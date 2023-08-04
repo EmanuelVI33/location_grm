@@ -9,7 +9,7 @@ class RouterApp {
       GoRoute(
           path: '/',
           builder: (context, state) {
-            return const Welcome();
+            return const MapaPage();
           },
           routes: [
             GoRoute(

@@ -15,6 +15,7 @@ class WelcomeState extends ConsumerState<Welcome> {
   void initState() {
     super.initState();
     ref.read(edificioProvider.notifier).getEdificio();
+    
   }
 
   @override
