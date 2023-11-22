@@ -26,6 +26,7 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.1.0
   flutter_polyline_points: ^1.0.0
+  pin_code_fields: ^7.4.0
 
 
 dev_dependencies:
