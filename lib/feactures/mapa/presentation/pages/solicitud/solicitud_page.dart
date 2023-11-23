@@ -5,6 +5,6 @@ class SolicitudPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(body: const Text('Solcitud aqui')));
+    return const SafeArea(child: Scaffold(body: Text('Solcitud aqui')));
   }
 }
