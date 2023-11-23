@@ -3,8 +3,6 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:avatar_glow/avatar_glow.dart';
-
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/camera_position_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/map_controller_provider.dart';
 import 'package:location_grm/feactures/mapa/presentation/providers/mapa/markers_provider.dart';

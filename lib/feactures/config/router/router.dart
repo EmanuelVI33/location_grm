@@ -5,6 +5,8 @@ import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.da
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/welcome.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/solicitud_screen.dart';
 
+
+
 class RouterApp {
   final router = GoRouter(
     initialLocation: '/',
@@ -19,6 +21,7 @@ class RouterApp {
               builder: (context, state) => const MapaPage(),
             ),
             GoRoute(
+
               path: 'home',
               name: HomePage.routeName,
               builder: (context, state) => const HomePage(),
