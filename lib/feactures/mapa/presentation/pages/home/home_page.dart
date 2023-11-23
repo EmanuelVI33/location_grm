@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/home/option_item.dart';
 
 class HomePage extends StatelessWidget {
+  static const routeName = 'home';
   const HomePage({super.key});
 
   @override
@@ -31,9 +33,14 @@ class HomePage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const OptionItem(
-                optionText: 'Solicitar Ambulancia',
-                icon: Icons.settings,
+              GestureDetector(
+                child: const OptionItem(
+                  optionText: 'Solicitar Ambulancia',
+                  icon: Icons.settings,
+                ),
+                onTap: () {
+                  context.push('/solicitud');
+                },
               ),
             ],
           ),

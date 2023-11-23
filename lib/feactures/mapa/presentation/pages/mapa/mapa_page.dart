@@ -11,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../providers/mapa/markers_provider.dart';
 
 class MapaPage extends ConsumerStatefulWidget {
+  static const routeName = 'mapa';
   const MapaPage({super.key});
 
   @override
@@ -30,7 +31,7 @@ class MapaPageState extends ConsumerState<MapaPage> {
     return Scaffold(
       body: MapaBody(textOriginController: origenController),
       floatingActionButton: FloatingMarkLocation(
-        onPressed:marcarUbicacionActual,
+        onPressed: marcarUbicacionActual,
       ),
       // floatingActionButton: Row(
       //   children: [
@@ -49,6 +50,7 @@ class MapaPageState extends ConsumerState<MapaPage> {
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
   Future<String> getAddress(LatLng point) async {
     final placemarks = await placemarkFromCoordinates(
       point.latitude,
@@ -60,6 +62,7 @@ class MapaPageState extends ConsumerState<MapaPage> {
 
     return placemarks.first.thoroughfare == '' ? 'Ubicación actual' : ubicacion;
   }
+
   Future<void> marcarUbicacionActual() async {
     final permissionStatus = await Permission.location.request();
     if (permissionStatus.isGranted) {
