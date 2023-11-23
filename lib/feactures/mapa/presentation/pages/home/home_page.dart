@@ -5,6 +5,7 @@ import 'package:location_grm/feactures/mapa/presentation/widgets/home/option_ite
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
+  static const routeName = 'home';
   const HomePage({super.key});
 
   @override

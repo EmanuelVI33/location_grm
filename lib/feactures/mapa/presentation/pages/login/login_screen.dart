@@ -8,11 +8,12 @@ import 'package:location_grm/feactures/mapa/presentation/widgets/text_field.dart
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class LoginScreen extends StatelessWidget {
-  static const route = '/login';
+  static const routeName = 'login';
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -84,6 +85,7 @@ class Number_phone extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Expanded(
         child: Align(
       alignment: Alignment.bottomCenter,
@@ -104,7 +106,7 @@ class Number_phone extends StatelessWidget {
                   height: Dimensions.height20 * 2.5,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      border: Border.all(color: AppColors.pink, width: 2)),
+                      border: Border.all(color: colors.primary, width: 2)),
                   child: Center(
                     child: Text(
                         "Numero telefonico" //controller.mobileNumberController.text),
@@ -130,9 +132,9 @@ class Number_phone extends StatelessWidget {
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
                       borderRadius: BorderRadius.circular(15),
-                      activeColor: AppColors.pink,
-                      inactiveColor: AppColors.pink,
-                      selectedColor: AppColors.pink,
+                      activeColor: colors.primary,
+                      inactiveColor: colors.secondary,
+                      selectedColor: colors.secondary,
                     ),
                     appContext: context,
                     length: 8,
@@ -153,15 +155,15 @@ class Number_phone extends StatelessWidget {
               height: Dimensions.height20,
             ),
             Button(
-              width: double.maxFinite,
-              height: Dimensions.height40 * 1.5,
+              width: 200,
+              height: 50,
               radius: Dimensions.radius20 * 2,
               on_pressed: () {
                 //controller.onLogin();
-                context.push('/solicitud');
+                context.push('/home');
               },
               text: 'LogIn',
-              color: AppColors.pink,
+              color: colors.primary,
             ),
           ],
         ),
