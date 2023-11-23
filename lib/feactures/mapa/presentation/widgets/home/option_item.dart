@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class OptionItem extends StatelessWidget {
   final String optionText;
   final IconData icon;
+  final Function() callback;
 
   const OptionItem({
     Key? key,
     required this.optionText,
     required this.icon,
+    required this.callback,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => context.go('/solicitud'),
+      onPressed: callback,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
