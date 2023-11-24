@@ -8,6 +8,7 @@ import 'package:location_grm/feactures/mapa/presentation/providers/viaje/polylin
 import 'package:location_grm/feactures/mapa/presentation/providers/viaje/route_provider.dart';
 
 class ViajeBody extends ConsumerStatefulWidget {
+  static const String routeName = 'viaje';
   const ViajeBody({super.key});
 
   @override
@@ -15,21 +16,8 @@ class ViajeBody extends ConsumerStatefulWidget {
 }
 
 class ViajeBodyState extends ConsumerState<ViajeBody> {
-  // final viajeController = ViajeController();
   BitmapDescriptor markerIcon =
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan);
-
-  // void generateMarker() async {
-  //   final icon = await BitmapDescriptor.fromAssetImage(
-  //       const ImageConfiguration(), "assets/icon-ambulance.jpg");
-
-  //   markerIcon = icon;
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,28 +28,42 @@ class ViajeBodyState extends ConsumerState<ViajeBody> {
         .read(polylineTravelProvider.notifier)
         .addPolyline(route.origen!, route.destino!);
 
-    return Stack(
-      children: [
-        SizedBox(
-          child: GoogleMap(
-            initialCameraPosition: cameraPosition,
-            onMapCreated: (controller) => ref
-                .read(mapCreatedProvider.notifier)
-                .setMapController(controller),
-            // onTap: null,
-            markers: {
-              if (route.origen != null)
-                Marker(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green, // Color de la barra de navegación
+      ),
+      body: Stack(
+        children: [
+          SizedBox(
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: cameraPosition,
+              onMapCreated: (controller) => ref
+                  .read(mapCreatedProvider.notifier)
+                  .setMapController(controller),
+              markers: {
+                if (route.origen != null)
+                  Marker(
                     markerId: const MarkerId("0"),
                     position: route.origen!,
-                    icon: markerIcon),
-              if (route.destino != null)
-                Marker(markerId: const MarkerId("1"), position: route.destino!),
-            },
-            polylines: {polylines},
+                    icon: markerIcon, // Cambia el icono del marcador
+                  ),
+                if (route.destino != null)
+                  Marker(
+                    markerId: const MarkerId("1"),
+                    position: route.destino!,
+                    icon: markerIcon, // Cambia el icono del marcador
+                  ),
+              },
+              polylines: {polylines},
+              // Personaliza la apariencia del mapa
+              // Ejemplo: `theme: MapStyle.darkMapStyle`
+              // Esto requiere tener un estilo personalizado previamente definido
+              // Verifica la documentación para más detalles sobre MapStyle.
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -2,77 +2,86 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/core/utils/colors.dart';
 import 'package:location_grm/feactures/core/utils/dimensions.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/big_text.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/button.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/text_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class LoginScreen extends StatelessWidget {
-  static const routeName = 'login';
+  static const String routeName = 'login';
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(Dimensions.width15, Dimensions.height10,
-              Dimensions.width15, Dimensions.height30),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: Image.network(
-                            'https://www.pngkit.com/png/detail/251-2511622_ambulance-drawing-side-view-ambulance-cartoon.png')),
-                    SizedBox(
-                      height: Dimensions.height15,
-                    ),
-
-                    Row(
-                      children: [
-                        const Expanded(
-                            child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Divider(
-                            thickness: 2,
-                            color: AppColors.black,
-                          ),
-                        )),
-                        BigText(
-                          text: 'Last Minute',
-                          size: Dimensions.font20 * 1.8,
-                        ),
-                        const Expanded(
-                            child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Divider(
-                            thickness: 2,
-                            color: AppColors.black,
-                          ),
-                        )),
-                      ],
-                    )
-                    // Button(
-                    //   on_pressed: () {},
-                    //   text: 'EMERGENCY',
-                    //   radius: Dimensions.radius20 * 2,
-                    //   width: double.maxFinite,
-
-                    //   color: AppColors.deepRed,
-                    // ),
-                  ],
-                ),
-              ),
-              Number_phone(),
-              //Mobile()
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.network(
+              "https://e1.pxfuel.com/desktop-wallpaper/364/984/desktop-wallpaper-50-emergency-state-of-emergency.jpg",
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+          Container(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(Dimensions.width15,
+                  Dimensions.height10, Dimensions.width15, Dimensions.height30),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: Dimensions.height15 * 20,
+                        ),
+
+                        Row(
+                          children: [
+                            const Expanded(
+                                child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Divider(thickness: 2, color: Colors.white),
+                            )),
+                            BigText(
+                              text: 'Swiftcare',
+                              size: Dimensions.font20 * 1.8,
+                              color: Colors.white,
+                            ),
+                            const Expanded(
+                                child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Divider(
+                                thickness: 2,
+                                color: AppColors.white,
+                              ),
+                            )),
+                          ],
+                        )
+                        // Button(
+                        //   on_pressed: () {},
+                        //   text: 'EMERGENCY',
+                        //   radius: Dimensions.radius20 * 2,
+                        //   width: double.maxFinite,
+
+                        //   color: AppColors.deepRed,
+                        // ),
+                      ],
+                    ),
+                  ),
+                  const Number_phone()
+                  //Mobile()
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -109,8 +118,10 @@ class Number_phone extends StatelessWidget {
                       border: Border.all(color: colors.primary, width: 2)),
                   child: Center(
                     child: Text(
-                        "Numero telefonico" //controller.mobileNumberController.text),
-                        ),
+                      "Numero telefonico",
+                      style: TextStyle(color: Colors.white),
+                      //controller.mobileNumberController.text),
+                    ),
                   ),
                 ),
               ),
@@ -133,7 +144,7 @@ class Number_phone extends StatelessWidget {
                       shape: PinCodeFieldShape.box,
                       borderRadius: BorderRadius.circular(15),
                       activeColor: colors.primary,
-                      inactiveColor: colors.secondary,
+                      inactiveColor: colors.primary,
                       selectedColor: colors.secondary,
                     ),
                     appContext: context,
@@ -160,7 +171,7 @@ class Number_phone extends StatelessWidget {
               radius: Dimensions.radius20 * 2,
               on_pressed: () {
                 //controller.onLogin();
-                context.push('/home');
+                context.pushNamed(AppTutorialScreen.routeName);
               },
               text: 'LogIn',
               color: colors.primary,

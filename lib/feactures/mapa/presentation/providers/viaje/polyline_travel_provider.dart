@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_grm/feactures/utils/getPolyline.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,6 +16,10 @@ class PolylineTravel extends _$PolylineTravel {
 
   addPolyline(LatLng origen, LatLng destino) async {
     final polylineCoordinates = await GetPolyline.getRoute(origen, destino);
-    state = (Polyline(polylineId: PolylineId(id), points: polylineCoordinates));
+    state = (Polyline(
+        polylineId: PolylineId(id),
+        points: polylineCoordinates,
+        color: Colors.blue,
+        width: 3));
   }
 }

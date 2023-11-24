@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location_grm/feactures/config/theme/app_theme.dart';
 import 'package:location_grm/feactures/core/utils/pickImage.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/viaje/viaje_body.dart';
 
 class SolicitudScreen extends StatefulWidget {
   static const routeName = 'solicitud';
@@ -90,47 +92,46 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
       backgroundColor: colors.background,
       appBar: AppBar(
         elevation: 0,
+        backgroundColor:
+            Colors.blue.shade900, // Cambia el color de fondo del app bar
         actions: [
-          Icon(
-            Icons.local_hospital,
-            color: colors.primary,
-            size: 35,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.local_hospital,
+              color: Colors.white, // Cambia el color del icono
+              size: 35,
+            ),
           )
         ],
-        title: const Text('Solictud de emergencia'),
+        title: Text(
+          'Solicitud de emergencia',
+          style: TextStyle(
+            color: Colors.white, // Cambia el color del texto del título
+            fontSize: 24, // Ajusta el tamaño del texto del título
+            fontWeight: FontWeight.bold, // Establece el peso de la fuente
+          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    '¿En que podemos ayudarte?',
+                    '¿En qué podemos ayudarte?',
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
+                      color: Colors.blue, // Cambia el color del texto
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-
-                // Padding(
-                //   padding: EdgeInsets.all(8.0),
-                //   child: Text(
-                //     'Describe tu emergencia',
-                //     style: TextStyle(
-                //       fontSize: 20,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   width: 10,
-                // ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -138,13 +139,29 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                       hintText: 'Describe tu emergencia',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                            color: Colors
+                                .grey), // Color del borde del campo de texto
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                            color: Colors
+                                .blue), // Color del borde cuando está enfocado
+                      ),
+                      fillColor:
+                          Colors.grey[200], // Color de fondo del campo de texto
+                      filled: true,
                     ),
                     maxLines: 5,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors
+                          .black87, // Cambia el color del texto del campo de texto
+                    ),
                   ),
                 ),
-
-                Padding(
+                const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Seleccione la ubicacion',
@@ -176,27 +193,24 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
-                  Positioned(
-                    top: 90,
-                    right: 80,
-                    child: IconButton(
-                      icon: const Icon(Icons.location_on),
-                      onPressed: () => context.go('/mapa'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 300,
-                    height: 300,
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(37.42796133580664, -122.085749655962),
-                        zoom: 14.0,
+                  Stack(children: [
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(-17.776322, -63.195126),
+                          zoom: 14.0,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          mapController = controller;
+                        },
                       ),
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
-                      },
                     ),
-                  ),
+                    Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.center, child: _getMarker())),
+                  ]),
                 ]),
                 SizedBox(
                   width: 30,
@@ -220,8 +234,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                     child: Stack(
                       children: [
                         Container(
-                          width: 200,
-                          height: 200,
+                          width: 300,
+                          height: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
                             boxShadow: [
@@ -237,8 +251,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                             borderRadius: BorderRadius.circular(12.0),
                             child: Image.memory(
                               _file!,
-                              width: 200,
-                              height: 200,
+                              width: 300,
+                              height: 300,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -272,8 +286,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                     child: Stack(
                       children: [
                         Container(
-                          width: 200,
-                          height: 200,
+                          width: 300,
+                          height: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
                             boxShadow: [
@@ -290,8 +304,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                           ),
                         ),
                         Positioned(
-                          top: 90,
-                          right: 80,
+                          top: 130,
+                          right: 130,
                           child: IconButton(
                             icon: const Icon(Icons.upload),
                             onPressed: () => _selectImage(context),
@@ -300,30 +314,6 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                       ],
                     ),
                   ),
-
-                /*Center(
-                  child: ElevatedButton(
-                    onPressed: () => _selectImage(context),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // Color de fondo del botón
-                      elevation: 3, // Elevación del botón
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(20.0), // Bordes redondeados
-                      ),
-                      padding: EdgeInsets.all(10), // Espaciado interno
-                    ),
-                    child: Text(
-                      'Subir imagen',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16, // Tamaño del texto
-                        fontWeight: FontWeight.bold, // Peso del texto
-                      ),
-                    ),
-                  ),
-                ),*/
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -332,7 +322,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                         child: CustomButton(
                           text: 'Cancelar',
                           color: Colors.red,
-                          onPressed: () => context.go('/home'),
+                          onPressed: () =>
+                              context.pushNamed(HomePage.routeName),
                         )),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -341,24 +332,46 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                         color: Colors.green,
                         onPressed: () {
                           showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                    title: Text('Solicitud enviada'),
-                                    content: Text(
-                                        'Su solicitud esta siendo tratada'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          context.go('/mapa');
-                                        },
-                                        child: Text('Aceptar'),
-                                      )
-                                    ]);
-                              });
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Solicitud enviada',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors
+                                        .green, // Cambia el color del título
+                                  ),
+                                ),
+                                content: const Text(
+                                  'Su solicitud está siendo tratada',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors
+                                        .black87, // Cambia el color del contenido
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      context.pushNamed(ViajeBody.routeName);
+                                    },
+                                    child: const Text(
+                                      'Aceptar',
+                                      style: TextStyle(
+                                        color: Colors
+                                            .green, // Cambia el color del botón de aceptar
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
-                    ),
+                    )
                   ],
                 )
               ],
@@ -368,31 +381,70 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
       ),
     );
   }
+
+  Widget _getMarker() {
+    return Container(
+      width: 40,
+      height: 40,
+      padding: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 3),
+                spreadRadius: 4,
+                blurRadius: 6)
+          ]),
+      child: ClipOval(child: Image.asset("assets/6.png")),
+    );
+  }
 }
 
 class CustomButton extends StatelessWidget {
   final Color color;
   final String text;
   final VoidCallback onPressed;
+
   const CustomButton({
-    super.key,
+    Key? key,
     required this.color,
     required this.text,
     required this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        elevation: MaterialStateProperty.all(3),
+        elevation: MaterialStateProperty.all(8), // Aumenta la elevación
         backgroundColor: MaterialStateProperty.all(color),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0), // Bordes más redondeados
+            // Agrega un borde al botón
+            //side: BorderSide(color: colors.secondary, width: 2),
+          ),
+        ),
+        // Agrega una sombra al botón
+        shadowColor: MaterialStateProperty.all(Colors.black.withOpacity(0.3)),
+        overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.1)),
       ),
-      child: Text(
-        text,
-        style: TextStyle(color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.0, // Aumenta el espacio entre letras
+          ),
+        ),
       ),
     );
   }

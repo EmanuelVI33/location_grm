@@ -4,7 +4,7 @@ import 'package:location_grm/feactures/config/router/router.dart';
 import 'package:location_grm/feactures/config/theme/app_theme.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MainApp()));
+  runApp(ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: AppTheme().getTheme(),
-      routerConfig: RouterApp().router,
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
     );
   }
