@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/core/utils/colors.dart';
 import 'package:location_grm/feactures/core/utils/dimensions.dart';
-import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
-import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/big_text.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/button.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/text_field.dart';
@@ -22,8 +20,8 @@ class LoginScreen extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.network(
-              "https://e1.pxfuel.com/desktop-wallpaper/364/984/desktop-wallpaper-50-emergency-state-of-emergency.jpg",
+            child: Image.asset(
+              "assets/8.jpg",
               fit: BoxFit.cover,
             ),
           ),
