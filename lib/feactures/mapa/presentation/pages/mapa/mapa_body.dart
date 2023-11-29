@@ -28,6 +28,7 @@ class MapaBodyState extends ConsumerState<MapaBody> {
   // FocusNode origenFocusNode = FocusNode();
   // FocusNode destinationFocusNode = FocusNode();
   MapaBodyState({required this.origenController});
+  GoogleMapController? _mapController;
 
   @override
   void initState() {
@@ -49,9 +50,12 @@ class MapaBodyState extends ConsumerState<MapaBody> {
             myLocationButtonEnabled: true,
             myLocationEnabled: true,
             zoomControlsEnabled: false,
-            onMapCreated: (controller) => ref
-                .read(mapCreatedProvider.notifier)
-                .setMapController(controller),
+            onMapCreated: (controller) {
+              ref
+                  .read(mapCreatedProvider.notifier)
+                  .setMapController(controller);
+              _mapController = controller;
+            },
             onTap: (LatLng point) async {
               ref.read(markersProvider.notifier).addDestino(point);
               ref.read(mapPolylineProvider.notifier).ocultar();
