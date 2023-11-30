@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_grm/feactures/mapa/domain/entities/route_travel.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/listaSolicitud/lista_widget.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/solicitud_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/home/option_item.dart';
 import 'package:go_router/go_router.dart';
@@ -125,9 +126,12 @@ class MyHomePage extends StatelessWidget {
                       },
                     ),
                     CardItem(
-                      title: 'Conductores',
+                      title: 'Tus Peticiones',
                       subtitle: '23 Conductores',
                       icon: Icons.portrait_outlined,
+                      voidCallbackAction: () {
+                        context.pushNamed(ListaPeticiones.routeName);
+                      },
                     ),
                     CardItem(
                       title: 'Encargados',
