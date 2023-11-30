@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/mapa/infrastructure/datasource/DBHelper.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/listaSolicitud/lista_widget.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/login_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
@@ -50,6 +51,11 @@ final appRouter = GoRouter(
       path: '/solicitud',
       name: SolicitudScreen.routeName,
       builder: (context, state) => const SolicitudScreen(),
+    ),
+    GoRoute(
+      path: '/solicitudes',
+      name: ListaPeticiones.routeName,
+      builder: (context, state) => const ListaPeticiones(),
     ),
     GoRoute(
       path: '/tutorial',

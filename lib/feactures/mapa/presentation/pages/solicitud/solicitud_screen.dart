@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +11,9 @@ import 'package:location_grm/feactures/core/utils/pickImage.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/viaje/viaje_body.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class SolicitudScreen extends StatefulWidget {
   static const routeName = 'solicitud';
@@ -20,6 +26,16 @@ class SolicitudScreen extends StatefulWidget {
 class _SolicitudScreenState extends State<SolicitudScreen> {
   Uint8List? _file;
   late GoogleMapController mapController;
+  TextEditingController descripcionController = TextEditingController();
+  LatLng? selectedLocation;
+  LatLng? markerPosition;
+  LatLng? userLocation;
+  @override
+  void initState() {
+    super.initState();
+    // Obtener la ubicación del usuario al inicio
+    getCurrentLocation();
+  }
 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -79,6 +95,96 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
         });
   }
 
+  void enviarSolicitud() async {
+    try {
+      // Obtener la posición actual del mapa
+      LatLng currentLatLng = await mapController.getLatLng(
+        ScreenCoordinate(
+          x: MediaQuery.of(context).size.width ~/ 2,
+          y: MediaQuery.of(context).size.height ~/ 2,
+        ),
+      );
+      var env = {
+        'latUser': userLocation?.latitude,
+        'lngUser': userLocation?.longitude,
+        'latScene': markerPosition?.latitude,
+        'lngScene': markerPosition?.longitude,
+        'address': "av. camacho",
+        'descripcion': descripcionController.text,
+        'victimsNum': 21
+      };
+
+      const viar = {
+        'id': "5276a769-1175-4966-ab4b-047924ab655a",
+        'ci': "123456", // Cambiado a cadena
+        'password': "contraseña",
+        'fullName': "Nombre Apellido",
+        'phone': 123456789,
+        'isResponsible': true,
+      };
+      // Crear una instancia de Dio
+      Dio dio = Dio();
+
+      // Crear el cuerpo de la solicitud
+      FormData formData = FormData.fromMap({'data': env, 'user': viar});
+
+      // Realizar la solicitud HTTP
+      Response response = await dio.post(
+        'https://swiftcareb-production.up.railway.app/api/requests',
+        data: formData,
+      );
+
+      // Verificar el código de respuesta
+      if (response.statusCode == 201) {
+        // La solicitud fue exitosa, puedes manejar la respuesta si es necesario
+        print('Solicitud enviada correctamente');
+      } else {
+        // La solicitud falló, manejar según sea necesario
+        print('Error al enviar la solicitud: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Manejar errores específicos, por ejemplo, problemas con el formato de los datos
+      print('Error al enviar la solicitud: $e');
+    }
+  }
+
+  void updateMarkerPosition(CameraPosition position) {
+    if (mounted) {
+      setState(() {
+        markerPosition = position.target;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Obtén la suscripción a las actualizaciones de posición
+    final GeolocatorPlatform geolocator = GeolocatorPlatform.instance;
+    final StreamSubscription<Position> positionStream =
+        geolocator.getPositionStream().listen((_) {});
+
+    // Cancela la suscripción
+    positionStream.cancel();
+
+    super.dispose();
+  }
+
+  void getCurrentLocation() async {
+    Position position = await getLocation();
+    print(json.encode(position));
+    setState(() {
+      userLocation = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  Future<LocationPermission> requestPermission() async {
+    return await Geolocator.requestPermission();
+  }
+
+  Future<Position> getLocation() async {
+    return await Geolocator.getCurrentPosition();
+  }
+
   void clearImage() {
     setState(() {
       _file = null;
@@ -135,29 +241,28 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: descripcionController, // Asignar el controlador
                     decoration: InputDecoration(
                       hintText: 'Describe tu emergencia',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors
-                                .grey), // Color del borde del campo de texto
+                          color: Colors.grey,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors
-                                .blue), // Color del borde cuando está enfocado
+                          color: Colors.blue,
+                        ),
                       ),
-                      fillColor:
-                          Colors.grey[200], // Color de fondo del campo de texto
+                      fillColor: Colors.grey[200],
                       filled: true,
                     ),
                     maxLines: 5,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors
-                          .black87, // Cambia el color del texto del campo de texto
+                      color: Colors.black87,
                     ),
                   ),
                 ),
@@ -193,24 +298,54 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                   ),
-                  Stack(children: [
-                    SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(-17.776322, -63.195126),
-                          zoom: 14.0,
+                  Stack(
+                    children: [
+                      Container(
+                        width: 300,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
-                        onMapCreated: (GoogleMapController controller) {
-                          mapController = controller;
-                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
-                    ),
-                    Positioned.fill(
-                        child: Align(
-                            alignment: Alignment.center, child: _getMarker())),
-                  ]),
+                      SizedBox(
+                        width: 300, // Establece un ancho específico
+                        height: 300, // Establece una altura específica
+                        child: Expanded(
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(-17.776322, -63.195126),
+                              zoom: 14.0,
+                            ),
+                            onMapCreated: (GoogleMapController controller) {
+                              mapController = controller;
+                            },
+                            myLocationEnabled:
+                                true, // Habilita la ubicación del usuario
+                            onCameraMove: (CameraPosition position) {
+                              // Actualiza la posición del marcador mientras se mueve el mapa
+                              setState(() {
+                                markerPosition = position.target;
+                              });
+                            },
+                            scrollGesturesEnabled:
+                                true, // Asegúrate de que esta propiedad está en true
+                            markers: Set.of([_getMarker()]),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ]),
                 SizedBox(
                   width: 30,
@@ -331,6 +466,7 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                         text: 'Enviar',
                         color: Colors.green,
                         onPressed: () {
+                          enviarSolicitud();
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -355,7 +491,8 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      context.pushNamed(ViajeBody.routeName);
+                                      // Aquí puedes llamar a la función para enviar la solicitud
+                                      enviarSolicitud();
                                     },
                                     child: const Text(
                                       'Aceptar',
@@ -382,22 +519,16 @@ class _SolicitudScreenState extends State<SolicitudScreen> {
     );
   }
 
-  Widget _getMarker() {
-    return Container(
-      width: 40,
-      height: 40,
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(100),
-          boxShadow: const [
-            BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0, 3),
-                spreadRadius: 4,
-                blurRadius: 6)
-          ]),
-      child: ClipOval(child: Image.asset("assets/6.png")),
+  Marker _getMarker() {
+    if (markerPosition == null) {
+      return Marker(markerId: MarkerId('default'));
+    }
+
+    return Marker(
+      markerId: MarkerId('selected'),
+      position: markerPosition!,
+      icon: BitmapDescriptor.defaultMarker,
+      draggable: true,
     );
   }
 }

@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: Dimensions.height15 * 20,
+                          height: Dimensions.height15 * 10,
                         ),
 
                         Row(
