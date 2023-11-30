@@ -1,19 +1,139 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
+import 'package:location_grm/feactures/core/constans/constants.dart';
+import 'package:location_grm/feactures/mapa/domain/entities/ambulancia_pos.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/audio_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location_grm/feactures/mapa/domain/entities/route_travel.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/listaSolicitud/lista_widget.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/solicitud_screen.dart';
-import 'package:location_grm/feactures/mapa/presentation/widgets/home/option_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/navigator_bar.dart';
+import 'package:shake/shake.dart';
 
-class HomePage extends StatelessWidget {
+
+
+class HomePage extends StatefulWidget {
   static const String routeName = 'home';
   const HomePage({super.key});
+
+
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  late ShakeDetector _shakeDetector;
+  int _shakeCount = 0;
+  Timer? _resetTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeDetector = ShakeDetector.autoStart(
+      shakeThresholdGravity: 1.5,
+      onPhoneShake: () {
+        setState(() {
+          _shakeCount++;
+
+          // Reinicia el temporizador cada vez que se detecta una agitación
+          _resetTimer?.cancel();
+          _resetTimer = Timer(Duration(seconds: 2), () {
+            _shakeCount = 0;
+          });
+
+          if (_shakeCount >= 3) {
+            _resetTimer?.cancel(); // Cancela el temporizador antes de mostrar el mensaje
+            _shakeCount = 0; // Reinicia el contador después de mostrar el mensaje
+            context.pushNamed(AudioScreen.routeName);
+          }
+        });
+      },
+    );
+  }
+
+  void listenEvent() {
+    try {
+      SSEClient.subscribeToSSE(
+          method: SSERequestType.GET,
+          url: '$apiUrl/accept',
+          header: {
+            // "Cookie":
+            //     'jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE2NDMyMTAyMzEsImV4cCI6MTY0MzgxNTAzMX0.U0aCAM2fKE1OVnGFbgAU_UVBvNwOMMquvPY8QaLD138; Path=/; Expires=Wed, 02 Feb 2022 15:17:11 GMT; HttpOnly; SameSite=Strict',
+            "Accept": "text/event-stream",
+            "Cache-Control": "no-cache",
+          }).listen(
+            (event) {
+          print(
+              '--------------------------------------------------------------------------------------');
+          print(
+              '${event.data}-------------------------------------------------------------------------------');
+          print(
+              '--------------------------------------------------------------------------------------');
+
+          if (event.data != null) {
+
+            final responseMap = requestFromJson(event.data!);
+            if (responseMap != null) {
+              _showMessageDialog(event.data!);
+            }
+          }
+
+          // Recibir y almacenar
+        },
+        onDone: () {
+          print("SSE stream closed");
+        },
+        onError: (error) {
+          print(
+              '--------------------------------------------------------------------------------------');
+          print("Error en la conexión SSE: $error");
+          print(
+              '--------------------------------------------------------------------------------------');
+        },
+      );
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void _showMessageDialog(data) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ubicacion de la ambulancia'),
+          content: Text('${data}'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _shakeDetector.stopListening();
+    _resetTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('$_shakeCount'),
+      ),
       body: MyHomePage(),
     );
   }

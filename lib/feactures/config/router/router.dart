@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:location_grm/feactures/mapa/infrastructure/datasource/DBHelper.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/listaSolicitud/lista_widget.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/login_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/audio_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/solicitud_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/viaje/viaje_body.dart';
+import 'package:path/path.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -13,7 +17,25 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/',
       name: LoginScreen.routeName,
-      builder: (context, state) => const LoginScreen(),
+      builder: (BuildContext context, GoRouterState state) {
+        return FutureBuilder<bool>(
+          future: DBHelper.instance.checkIfUserExists(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final doesUserExist = snapshot.data ?? false;
+
+              if (doesUserExist) {
+                return const HomePage();
+              } else {
+                return const LoginScreen();
+              }
+            } else {
+              // You might want to return a loading indicator while checking for user existence
+              return CircularProgressIndicator();
+            }
+          },
+        );
+      },
     ),
     GoRoute(
       path: '/mapaPage',
@@ -45,5 +67,10 @@ final appRouter = GoRouter(
       name: ViajeBody.routeName,
       builder: (context, state) => const ViajeBody(),
     ),
+    GoRoute(
+      path: '/audio',
+      name: AudioScreen.routeName,
+      builder: (context, state) =>  AudioScreen(),
+    )
   ],
 );

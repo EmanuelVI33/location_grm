@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/core/utils/colors.dart';
 import 'package:location_grm/feactures/core/utils/dimensions.dart';
+import 'package:location_grm/feactures/mapa/infrastructure/datasource/DBHelper.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/big_text.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/button.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/text_field.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = 'login';
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
