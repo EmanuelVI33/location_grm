@@ -1,30 +1,30 @@
 class User {
-
-  final String ci;
-  final String password;
-  final String fullName;
-  final int phone;
-  final String sex;
-  final String birthdate;
-  final String? bloodGroup;
-  final String? assurance;
+  String ci;
+  String password;
+  String fullname;
+  int phone;
+  String sex;
+  String birthdate;
+  String? bloodGroup;
+  String? assurance;
 
   User({
     required this.ci,
     required this.password,
-    required this.fullName,
+    required this.fullname,
     required this.phone,
     required this.sex,
     required this.birthdate,
     this.bloodGroup,
-    this.assurance
+    this.assurance,
   });
+
 
   Map<String, dynamic> toMap() {
     return {
       'ci': ci,
       'password': password,
-      'full_name': fullName,
+      'fullname': fullname,
       'phone': phone,
       'sex': sex,
       'birthdate': birthdate,
@@ -37,7 +37,7 @@ class User {
     return User(
       ci: map['ci'],
       password: map['password'],
-      fullName: map['full_name'],
+      fullname: map['fullname'],
       phone: map['phone'],
       sex: map['sex'],
       birthdate: map['birthdate'],

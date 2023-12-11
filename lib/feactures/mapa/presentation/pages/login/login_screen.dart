@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_grm/feactures/core/utils/colors.dart';
 import 'package:location_grm/feactures/core/utils/dimensions.dart';
 import 'package:location_grm/feactures/mapa/infrastructure/datasource/DBHelper.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/home/home_page.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/signup/signup_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/big_text.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/button.dart';
 import 'package:location_grm/feactures/mapa/presentation/widgets/text_field.dart';
@@ -22,217 +24,169 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/8.jpg",
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(Dimensions.width15,
-                  Dimensions.height10, Dimensions.width15, Dimensions.height30),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: Dimensions.height15 * 10,
-                        ),
-
-                        Row(
-                          children: [
-                            const Expanded(
-                                child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Divider(thickness: 2, color: Colors.white),
-                            )),
-                            BigText(
-                              text: 'Swiftcare',
-                              size: Dimensions.font20 * 1.8,
-                              color: Colors.white,
-                            ),
-                            const Expanded(
-                                child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Divider(
-                                thickness: 2,
-                                color: AppColors.white,
-                              ),
-                            )),
-                          ],
-                        )
-                        // Button(
-                        //   on_pressed: () {},
-                        //   text: 'EMERGENCY',
-                        //   radius: Dimensions.radius20 * 2,
-                        //   width: double.maxFinite,
-
-                        //   color: AppColors.deepRed,
-                        // ),
-                      ],
-                    ),
-                  ),
-                  const Number_phone()
-                  //Mobile()
-                ],
-              ),
-            ),
-          ),
-        ],
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,),
+        ), systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-    );
-  }
-}
-
-class Number_phone extends StatelessWidget {
-  const Number_phone({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Expanded(
-        child: Align(
-      alignment: Alignment.bottomCenter,
-      child: SingleChildScrollView(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: Dimensions.height20,
-            ),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  //controller.onSendOtp();
-                },
-                child: Container(
-                  width: Dimensions.width40 * 8,
-                  height: Dimensions.height20 * 2.5,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      border: Border.all(color: colors.primary, width: 2)),
-                  child: Center(
-                    child: Text(
-                      "Numero telefonico",
-                      style: TextStyle(color: Colors.white),
-                      //controller.mobileNumberController.text),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text("Login",
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                    SizedBox(height: 20,),
+                    Text("Login to your account",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color:Colors.grey[700]),)
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: <Widget>[
+                      inputFile(label: "Email"),
+                      inputFile(label: "Password", obscureText: true)
+                    ],
+                  ),
+                ),
+                Padding(padding:
+                EdgeInsets.symmetric(horizontal: 40),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 3, left: 3),
+                    decoration:
+                    BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border(
+                          bottom: BorderSide(color: Colors.black),
+                          top: BorderSide(color: Colors.black),
+                          left: BorderSide(color: Colors.black),
+                          right: BorderSide(color: Colors.black),
+
+                        )
+
+
+
+                    ),
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: () {},
+                      color: Color(0xffff0000),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+
+                      ),
+                      child: Text(
+                        "Login", style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: Colors.white,
+
+                      ),
+                      ),
+
                     ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              height: Dimensions.height20,
-            ),
-            // BigText(
-            //   text: 'Enter Otp',
-            //   fontWeight: FontWeight.bold,
-            // ),
-            SizedBox(
-              height: Dimensions.height20,
-            ),
-            SizedBox(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: PinCodeTextField(
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(15),
-                      activeColor: colors.primary,
-                      inactiveColor: colors.primary,
-                      selectedColor: colors.secondary,
+
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("No tienes cuenta?"),
+                    TextButton(
+                      onPressed: () {
+                        context.pushNamed(SignupScreen.routeName);
+                      },
+                      child: Text(
+                        " Registrarse",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
-                    appContext: context,
-                    length: 8,
-                    onChanged: (value) {
-                      //controller.onChangedOtp(value);
-                    }),
-              ),
-            ),
-            SizedBox(
-              height: Dimensions.height20,
-            ),
-            BigText(text: 'By clicking Login, you accept our'),
-            BigText(
-              text: 'Terms and Conditions',
-              color: Colors.blueAccent,
-            ),
-            SizedBox(
-              height: Dimensions.height20,
-            ),
-            Button(
-              width: 200,
-              height: 50,
-              radius: Dimensions.radius20 * 2,
-              on_pressed: () {
-                //controller.onLogin();
-                context.pushNamed(AppTutorialScreen.routeName);
-              },
-              text: 'LogIn',
-              color: colors.primary,
-            ),
+                  ],
+                ),
+
+                Container(
+                  padding: EdgeInsets.only(top: 100),
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/background.png"),
+                        fit: BoxFit.fitHeight
+                    ),
+
+                  ),
+                )
+
+              ],
+            ))
           ],
         ),
       ),
-    ));
-  }
-}
-
-class Mobile extends StatelessWidget {
-  const Mobile({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Center(
-            child: Text_Field(
-                radius: Dimensions.radius20,
-                text_field_width: double.maxFinite,
-                text_field_height: Dimensions.height20 * 3,
-                text_field: TextField(
-                  //controller: controller.mobileNumberController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: AppColors.pink,
-                    ),
-                    hintText: 'Mobile Number',
-                  ),
-                )),
-          ),
-          SizedBox(
-            height: Dimensions.height20,
-          ),
-          Button(
-            width: double.maxFinite,
-            height: Dimensions.height40 * 1.5,
-            radius: Dimensions.radius20 * 2,
-            on_pressed: () {
-              //controller.onSendOtp();
-            },
-            text: 'Send Otp',
-            color: AppColors.pink,
-          ),
-        ],
-      ),
     );
   }
+
+}
+
+
+// we will be creating a widget for text field
+Widget inputFile({label, obscureText = false})
+{
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(
+        label,
+        style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color:Colors.black87
+        ),
+
+      ),
+      SizedBox(
+        height: 5,
+      ),
+      TextField(
+        obscureText: obscureText,
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0,
+                horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.grey.shade400
+              ),
+
+            ),
+            border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade400)
+            )
+        ),
+      ),
+      SizedBox(height: 10,)
+    ],
+  );
 }

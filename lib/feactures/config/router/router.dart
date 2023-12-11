@@ -6,16 +6,23 @@ import 'package:location_grm/feactures/mapa/presentation/pages/listaSolicitud/li
 import 'package:location_grm/feactures/mapa/presentation/pages/login/login_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/login/tutorial_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/mapa/mapa_page.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/signup/signup_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/audio_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/solicitud/solicitud_screen.dart';
+import 'package:location_grm/feactures/mapa/presentation/pages/splash/splash_screen.dart';
 import 'package:location_grm/feactures/mapa/presentation/pages/viaje/viaje_body.dart';
-import 'package:path/path.dart';
+
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
+      name: SplashScreen.routeName,
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/loginPage',
       name: LoginScreen.routeName,
       builder: (BuildContext context, GoRouterState state) {
         return FutureBuilder<bool>(
@@ -31,11 +38,18 @@ final appRouter = GoRouter(
               }
             } else {
               // You might want to return a loading indicator while checking for user existence
-              return CircularProgressIndicator();
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
           },
         );
       },
+    ),
+    GoRoute(
+      path: '/signupPage',
+      name: SignupScreen.routeName,
+      builder: (context, state) => SignupScreen(),
     ),
     GoRoute(
       path: '/mapaPage',
