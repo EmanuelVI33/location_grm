@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "108119032594",
+    "project_id": "swiftcare-eb012",
+    "storage_bucket": "swiftcare-eb012.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108119032594:android:0578747ac05031ae50e9cb",
+        "android_client_info": {
+          "package_name": "com.example.location_grm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCV2BQgY8qa_9Xvpg1ylqozf_zpUQuBX1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
